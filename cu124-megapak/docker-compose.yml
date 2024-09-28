@@ -13,6 +13,7 @@ services:
       - "./storage:/root"
     environment:
       - CLI_ARGS=
+      - UPDATE_COMFYUI=${UPDATE_COMFYUI}
     security_opt:
       - "label=type:nvidia_container_t"
     deploy:

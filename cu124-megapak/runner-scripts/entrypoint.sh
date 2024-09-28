@@ -14,9 +14,9 @@ else
     source /root/user-scripts/set-proxy.sh
 fi ;
 
-# Install ComfyUI
+# Install or update ComfyUI
 cd /root
-if [ ! -f "/root/.download-complete" ] ; then
+if [ ! -f "/root/.download-complete" ] || [ "$UPDATE_COMFYUI" = "true" ]; then
     chmod +x /runner-scripts/download.sh
     bash /runner-scripts/download.sh
 fi ;

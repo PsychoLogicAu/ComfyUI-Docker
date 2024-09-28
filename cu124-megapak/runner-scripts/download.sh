@@ -10,8 +10,16 @@ function clone_or_pull () {
     if [[ $1 =~ ^(.*[/:])(.*)(\.git)$ ]] || [[ $1 =~ ^(http.*\/)(.*)$ ]]; then
         echo "${BASH_REMATCH[2]}" ;
         set +e ;
-            git clone --depth=1 --no-tags --recurse-submodules --shallow-submodules "$1" \
-                || git -C "${BASH_REMATCH[2]}" pull --ff-only ;
+            if [ ! -d "${BASH_REMATCH[2]}" ]; then
+                git clone --depth=1 --no-tags --recurse-submodules --shallow-submodules "$1"
+            else
+                # Set ownership to the current user
+                chown -R "$(id -u):$(id -g)" "${BASH_REMATCH[2]}"
+                # Pull latest changes
+                git -C "${BASH_REMATCH[2]}" reset --hard HEAD
+                git -C "${BASH_REMATCH[2]}" clean -fd
+                git -C "${BASH_REMATCH[2]}" pull --ff-only
+            fi
         set -e ;
     else
         echo "[ERROR] Invalid URL: $1" ;
